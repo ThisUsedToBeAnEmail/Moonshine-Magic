@@ -31,6 +31,14 @@ our $VERSION = '0.01';
     extends 'Bar'
     # BEGIN { @ISA = ('Bar') } 
 
+=head2 attributes
+
+    attributes ( 
+        '..' => '..',  
+        '..' => '..',   
+    );
+    # BEGIN { @HAS = ('...' => '...') }
+
 =cut
 
 sub import {
@@ -40,6 +48,13 @@ sub import {
         ($caller, 'extends') => sub {
             no strict 'refs';
             @{$caller . '::ISA'} = @_;
+        }
+    );
+
+    BEGIN::Lift::install(
+        ($caller, 'attributes') => sub {
+            no strict 'refs';
+            @{$caller . '::HAS'} = @_;
         }
     );
 
