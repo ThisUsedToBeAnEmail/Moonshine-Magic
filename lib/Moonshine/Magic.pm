@@ -4,8 +4,8 @@ use 5.006;
 use strict;
 use warnings;
 
+use UNIVERSAL::Object;
 use BEGIN::Lift;
-
 
 =head1 NAME
 
@@ -36,7 +36,7 @@ our $VERSION = '0.01';
 sub import {
     my $caller = caller;
 
-    Begin::Lift::install(
+    BEGIN::Lift::install(
         ($caller, 'extends') => sub {
             no strict 'refs';
             @{$caller . '::ISA'} = @_;
