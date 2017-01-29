@@ -52,9 +52,13 @@ sub import {
     );
 
     BEGIN::Lift::install(
-        ($caller, 'attributes') => sub {
+        ($caller, 'has') => sub {
+            my %args = @_;
             no strict 'refs';
-            @{$caller . '::HAS'} = @_;
+            %{$caller . '::HAS'} = %args;
+            for my $arg (keys %args) {
+                *{$caller . "::" . $arg} = sub { return $args{$arg}->(); };
+            }
         }
     );
 
