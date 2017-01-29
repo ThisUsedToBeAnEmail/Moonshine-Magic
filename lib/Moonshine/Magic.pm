@@ -28,18 +28,17 @@ our $VERSION = '0.01';
 
 =head2 extends
 
-    extends 'Bar'
-    # BEGIN { @ISA = ('Bar') } 
+    extends 'Moonshine::Component';
+    # BEGIN { @ISA = ('Moonshine::Component') } 
 
 =head2 has
 
     has ( 
-        'moon' => sub { return '...' },  
-        'shine' => sub { return '.,.' },   
+        'modify_spec' => sub { { switch => 0, switch_base => 0 } },  
     );
 
-    # BEGIN { @HAS = ('moon' => sub { '...' }, 'shine' => sub { ...} ) }
-    # $self->moon, $self->shine
+    # BEGIN { @HAS = ( 'modify_spec' => sub { { switch => 0, switch_base => 0 } } }    
+    # $self->modify_spec
 
 =cut
 
