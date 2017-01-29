@@ -1,59 +1,94 @@
-# NAME
+package Moonshine::Magic;
+
+use 5.006;
+use strict;
+use warnings;
+
+use BEGIN::Lift;
+
+
+=head1 NAME
 
 Moonshine::Magic - The great new Moonshine::Magic!
 
-# VERSION
+=head1 VERSION
 
 Version 0.01
 
-# SYNOPSIS
+=cut
+
+our $VERSION = '0.01';
+
+
+=head1 SYNOPSIS
 
     use Moonshine::Magic;
 
-# Imports
+=head1 Imports
 
-## extends
+=head2 extends
 
     extends 'Bar'
     # BEGIN { @ISA = ('Bar') } 
 
-# AUTHOR
+=cut
 
-Robert Acock, `<thisusedtobeanemail at gmail.com>`
+sub import {
+    my $caller = caller;
 
-# BUGS
+    Begin::Lift::install(
+        ($caller, 'extends') => sub {
+            no strict 'refs';
+            @{$caller . '::ISA'} = @_;
+        }
+    );
 
-Please report any bugs or feature requests to `bug-moonshine-magic at rt.cpan.org`, or through
-the web interface at [http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Moonshine-Magic](http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Moonshine-Magic).  I will be notified, and then you'll
+}
+
+=head1 AUTHOR
+
+Robert Acock, C<< <thisusedtobeanemail at gmail.com> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests to C<bug-moonshine-magic at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Moonshine-Magic>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
-# SUPPORT
+=head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
     perldoc Moonshine::Magic
 
+
 You can also look for information at:
 
-- RT: CPAN's request tracker (report bugs here)
+=over 4
 
-    [http://rt.cpan.org/NoAuth/Bugs.html?Dist=Moonshine-Magic](http://rt.cpan.org/NoAuth/Bugs.html?Dist=Moonshine-Magic)
+=item * RT: CPAN's request tracker (report bugs here)
 
-- AnnoCPAN: Annotated CPAN documentation
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Moonshine-Magic>
 
-    [http://annocpan.org/dist/Moonshine-Magic](http://annocpan.org/dist/Moonshine-Magic)
+=item * AnnoCPAN: Annotated CPAN documentation
 
-- CPAN Ratings
+L<http://annocpan.org/dist/Moonshine-Magic>
 
-    [http://cpanratings.perl.org/d/Moonshine-Magic](http://cpanratings.perl.org/d/Moonshine-Magic)
+=item * CPAN Ratings
 
-- Search CPAN
+L<http://cpanratings.perl.org/d/Moonshine-Magic>
 
-    [http://search.cpan.org/dist/Moonshine-Magic/](http://search.cpan.org/dist/Moonshine-Magic/)
+=item * Search CPAN
 
-# ACKNOWLEDGEMENTS
+L<http://search.cpan.org/dist/Moonshine-Magic/>
 
-# LICENSE AND COPYRIGHT
+=back
+
+
+=head1 ACKNOWLEDGEMENTS
+
+
+=head1 LICENSE AND COPYRIGHT
 
 Copyright 2017 Robert Acock.
 
@@ -61,7 +96,7 @@ This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a
 copy of the full license at:
 
-[http://www.perlfoundation.org/artistic\_license\_2\_0](http://www.perlfoundation.org/artistic_license_2_0)
+L<http://www.perlfoundation.org/artistic_license_2_0>
 
 Any use, modification, and distribution of the Standard or Modified
 Versions is governed by this Artistic License. By using, modifying or
@@ -92,3 +127,8 @@ YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR
 CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR
 CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+=cut
+
+1; # End of Moonshine::Magic
