@@ -9,7 +9,7 @@ use BEGIN::Lift;
 
 =head1 NAME
 
-Moonshine::Magic - The great new Moonshine::Magic!
+Moonshine::Magic - d[ o_0 ]b - has and extends
 
 =head1 VERSION
 
@@ -31,13 +31,15 @@ our $VERSION = '0.01';
     extends 'Bar'
     # BEGIN { @ISA = ('Bar') } 
 
-=head2 attributes
+=head2 has
 
-    attributes ( 
-        '..' => '..',  
-        '..' => '..',   
+    has ( 
+        'moon' => sub { return '...' },  
+        'shine' => sub { return '.,.' },   
     );
-    # BEGIN { @HAS = ('...' => '...') }
+
+    # BEGIN { @HAS = ('moon' => sub { '...' }, 'shine' => sub { ...} ) }
+    # $self->moon, $self->shine
 
 =cut
 
