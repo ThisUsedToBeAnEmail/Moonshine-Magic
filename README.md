@@ -1,6 +1,6 @@
 # NAME
 
-Moonshine::Magic - The great new Moonshine::Magic!
+Moonshine::Magic - d\[ o\_0 \]b - has and extends
 
 # VERSION
 
@@ -16,6 +16,16 @@ Version 0.01
 
     extends 'Bar'
     # BEGIN { @ISA = ('Bar') } 
+
+## has
+
+    has ( 
+        'moon' => sub { return '...' },  
+        'shine' => sub { return '.,.' },   
+    );
+
+    # BEGIN { @HAS = ('moon' => sub { '...' }, 'shine' => sub { ...} ) }
+    # $self->moon, $self->shine
 
 # AUTHOR
 
