@@ -19,6 +19,8 @@ WriteMakefile(
     BUILD_REQUIRES => {
         'Test::More' => 0,
         'Moonshine::Test' => 0,
+        'strict' => 0,
+        'warnings' => 0,
     },
     PREREQ_PM => {
         'UNIVERSAL::Object' => 0,

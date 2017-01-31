@@ -13,11 +13,11 @@ Moonshine::Magic - d[ o_0 ]b - has and extends
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 =head1 SYNOPSIS
@@ -57,7 +57,7 @@ sub import {
             my %args = @_;
             no strict 'refs';
             no warnings 'once';
-            %{$caller . '::HAS'} = %args;
+            %{"${caller}::HAS"} = %args;
             for my $arg (keys %args) {
                 *{$caller . "::" . $arg} = sub { return $args{$arg}->(); };
             }
@@ -81,7 +81,6 @@ automatically be notified of progress on your bug as I make changes.
 You can find documentation for this module with the perldoc command.
 
     perldoc Moonshine::Magic
-
 
 You can also look for information at:
 

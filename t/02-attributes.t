@@ -9,6 +9,7 @@ extends 'UNIVERSAL::Object';
 has (
     true  => sub { return 1 },
     false => sub { return 0 },
+    test  => sub { return ['hello']},
 );
 
 1;
@@ -18,6 +19,10 @@ package Test::One;
 use Moonshine::Magic;
 
 extends 'Test::Base';
+
+has (
+    test => sub { return ['goodbye'] },
+);
 
 package main;
 
@@ -35,4 +40,12 @@ moon_test_one(
     func => 'false',
 );
 
-sunrise(2);
+moon_test_one(
+    test => 'ref_index_scalar',
+    index => 0,
+    instance => $instance,
+    func => 'test',
+    expected => 'goodbye',
+);
+
+sunrise(3);
