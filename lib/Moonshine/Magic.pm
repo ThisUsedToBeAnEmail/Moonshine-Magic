@@ -56,6 +56,7 @@ sub import {
         ($caller, 'has') => sub {
             my %args = @_;
             no strict 'refs';
+            no warnings 'once';
             %{$caller . '::HAS'} = %args;
             for my $arg (keys %args) {
                 *{$caller . "::" . $arg} = sub { return $args{$arg}->(); };

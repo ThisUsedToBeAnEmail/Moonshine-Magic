@@ -3,6 +3,7 @@ use Moonshine::Test qw/:all/;
 package Test::Base;
 
 use Moonshine::Magic;
+
 extends 'UNIVERSAL::Object';
 
 has (
@@ -15,8 +16,6 @@ has (
 package Test::One;
 
 use Moonshine::Magic;
-
-our %HAS;
 
 extends 'Test::Base';
 
