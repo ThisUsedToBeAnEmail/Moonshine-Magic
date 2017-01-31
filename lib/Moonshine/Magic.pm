@@ -48,7 +48,7 @@ sub import {
     BEGIN::Lift::install(
         ($caller, 'extends') => sub {
             no strict 'refs';
-            @{$caller . '::ISA'} = @_;
+            @{"${caller}::ISA"} = @_;
         }
     );
 
@@ -59,7 +59,7 @@ sub import {
             no warnings 'once';
             %{"${caller}::HAS"} = %args;
             for my $arg (keys %args) {
-                *{$caller . "::" . $arg} = sub { return $args{$arg}->(); };
+                *{"${caller}::${arg}"} = sub { return $args{$arg}->(); };
             }
         }
     );
