@@ -25,6 +25,7 @@ WriteMakefile(
     PREREQ_PM => {
         'UNIVERSAL::Object' => 0,
         'BEGIN::Lift' => 0,
+        'Moonshine::Element' => 0,
         'strict' => 0,
         'warnings' => 0,
     },
