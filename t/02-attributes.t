@@ -24,6 +24,8 @@ has (
     test => sub { return ['goodbye'] },
 );
 
+lazy_components (qw/span/);
+
 package main;
 
 my $instance = Test::One->new();
@@ -48,4 +50,33 @@ moon_test_one(
     expected => 'goodbye',
 );
 
-sunrise(3);
+moon_test_one(
+    test => 'render',
+    instance => $instance,
+    func => 'span',
+    expected => '<span></span>',
+);
+
+moon_test_one(
+    test => 'render',
+    instance => $instance,
+    func => 'span',
+    args => {
+        data => 'hello',
+    },
+    expected => '<span>hello</span>',
+);
+
+moon_test_one(
+    test => 'render',
+    instance => $instance,
+    func => 'span',
+    args => [{
+        data => 'hello',
+        id => 'one',
+    }, { id => 1 }],
+    args_list => 1,
+    expected => '<span id="one">hello</span>',
+);
+
+sunrise(6);

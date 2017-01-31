@@ -6,18 +6,19 @@ use warnings;
 
 use UNIVERSAL::Object;
 use BEGIN::Lift;
+use Moonshine::Element;
 
 =head1 NAME
 
-Moonshine::Magic - d[ o_0 ]b - has and extends
+Moonshine::Magic - d[ o_0 ]b - has, extends, lazy_components
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 
 =head1 SYNOPSIS
@@ -39,6 +40,11 @@ our $VERSION = '0.02';
 
     # BEGIN { @HAS = ( 'modify_spec' => sub { { switch => 0, switch_base => 0 } } }    
     # $self->modify_spec
+
+=head2 lazy_components
+
+    lazy_components (qw/p span h1/);
+    # $self->span() - <span></span>
 
 =cut
 
@@ -64,6 +70,34 @@ sub import {
         }
     );
 
+    BEGIN::Lift::install(
+        ($caller, 'lazy_components') => sub {
+	        my @lazy_components = @_;
+            no strict 'refs';
+            no warnings 'once';
+            for my $component (@lazy_components) {
+		        *{"${caller}::${component}"} = sub {
+			        my $self = shift;
+                   
+                    my ($base_args, $build_args) = ();
+                    if ($self->can('validate_build')) {
+                        ( $base_args, $build_args ) = $self->validate_build({
+                            params => $_[0] // {},
+                            spec => {
+                                tag  => { default => $component },
+                                data => 0,
+                                ( $_[1] ? %{ $_[1] } : () )
+                            }
+                        });
+                    } else {
+                        $base_args = { tag => $component, %{ $_[0] } }; 
+                    }
+
+                    return Moonshine::Element->new($base_args);
+                }
+	        }
+        }
+    );
 }
 
 =head1 AUTHOR
