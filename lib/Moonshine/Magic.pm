@@ -51,7 +51,11 @@ sub import {
     BEGIN::Lift::install(
         ($caller, 'extends') => sub {
             no strict 'refs';
-            @{"${caller}::ISA"} = @_;
+            my @extends = @_;
+            for (@extends) {
+                eval "require $_";
+            }
+            @{"${caller}::ISA"} = @extends;
         }
     );
 
