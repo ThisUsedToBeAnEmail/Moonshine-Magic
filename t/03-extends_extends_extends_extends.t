@@ -92,5 +92,4 @@ moon_test(
     ],
 );
 
-
-sunrise();
+sunrise(14, '*\o/*');

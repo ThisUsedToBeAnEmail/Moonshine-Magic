@@ -6,6 +6,11 @@ README
 t/00-load.t
 t/01-extends.t  
 t/02-attributes.t
+t/03-extends_extends_extends_extends.t
+t/extends/BlackMagic.pm
+t/extends/Wand.pm
+t/extends/Spell.pm
+t/extends/Fairy.pm
 t/manifest.t
 t/pod-coverage.t
 t/pod.t

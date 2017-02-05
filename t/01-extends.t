@@ -3,6 +3,7 @@ use Moonshine::Test qw/:all/;
 package Test::Base;
 
 use Moonshine::Magic;
+use UNIVERSAL::Object;
 extends 'UNIVERSAL::Object';
 
 sub true {
