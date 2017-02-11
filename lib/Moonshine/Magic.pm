@@ -5,7 +5,6 @@ use warnings;
 
 use BEGIN::Lift;
 use Moonshine::Element;
-use Moonshine::Magic::Role;
 
 use MOP::Class;
 use MOP::Role;
