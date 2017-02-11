@@ -5,6 +5,7 @@ use warnings;
 
 use BEGIN::Lift;
 use Moonshine::Element;
+use Moonshine::Magic::Role;
 
 =head1 NAME
 
@@ -68,6 +69,12 @@ sub import {
             for my $arg (keys %args) {
                 *{"${caller}::${arg}"} = sub { return $args{$arg}->(); };
             }
+        }
+    );
+
+    BEGIN::Lift::install(
+        ($caller, 'with') => sub {
+            Moonshine::Magic::Role->apply_roles($caller, @_);
         }
     );
 
