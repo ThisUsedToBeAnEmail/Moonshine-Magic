@@ -7,6 +7,10 @@ use BEGIN::Lift;
 use Moonshine::Element;
 use Moonshine::Magic::Role;
 
+use MOP::Class;
+use MOP::Role;
+use Carp qw/croak/;
+
 =head1 NAME
 
 Moonshine::Magic - d[ o_0 ]b - has, extends, lazy_components
@@ -39,6 +43,10 @@ our $VERSION = '0.05';
     # BEGIN { @HAS = ( 'modify_spec' => sub { { switch => 0, switch_base => 0 } } }    
     # $self->modify_spec
 
+=head2 with
+
+    with 'Moonshine::Component::Glyphicon';
+
 =head2 lazy_components
 
     lazy_components (qw/p span h1/);
@@ -50,60 +58,87 @@ sub import {
     my $caller = caller;
 
     BEGIN::Lift::install(
-        ($caller, 'extends') => sub {
+        ( $caller, 'extends' ) => sub {
             no strict 'refs';
             my @extends = @_;
+
+            unshift @extends, 'UNIVERSAL::Object'
+              unless grep { $_ eq 'UNIVERSAL::Object' } @extends;
+
             for (@extends) {
                 eval "require $_";
+                croak $@ if $@;
             }
+
             @{"${caller}::ISA"} = @extends;
         }
     );
 
     BEGIN::Lift::install(
-        ($caller, 'has') => sub {
+        ( $caller, 'has' ) => sub {
             my %args = @_;
             no strict 'refs';
             no warnings 'once';
             %{"${caller}::HAS"} = %args;
-            for my $arg (keys %args) {
-                *{"${caller}::${arg}"} = sub { return $args{$arg}->(); };
+
+            my $class = MOP::Class->new($caller);
+            for my $arg ( keys %args ) {
+                $class->add_method( $arg, sub { return $args{$arg}->(); } );
             }
         }
     );
 
     BEGIN::Lift::install(
-        ($caller, 'with') => sub {
-            Moonshine::Magic::Role->apply_roles($caller, @_);
+        ( $caller, 'with' ) => sub {
+            my @roles = @_;
+            croak "No roles supplied!" unless @roles;
+            my $class = MOP::Class->new($caller);
+            for my $r (@roles) {
+                my $role = MOP::Class->new($r);
+                for my $meth ( $role->all_methods ) {
+                    next if $meth->name eq '__ANON__';
+                    $class->add_method( $meth->name, $meth->body );
+                }
+
+                for my $slot ( $role->all_slots ) {
+                    $class->alias_slot( $slot->name, $slot->initializer );
+                    $class->add_method( $slot->name, $slot->initializer );
+                }
+            }
         }
     );
 
     BEGIN::Lift::install(
-        ($caller, 'lazy_components') => sub {
-	        my @lazy_components = @_;
-            no strict 'refs';
-            no warnings 'once';
+        ( $caller, 'lazy_components' ) => sub {
+            my @lazy_components = @_;
+            my $class           = MOP::Class->new($caller);
             for my $component (@lazy_components) {
-		        *{"${caller}::${component}"} = sub {
-			        my $self = shift;
-                   
-                    my ($base_args, $build_args) = ();
-                    if ($self->can('validate_build')) {
-                        ( $base_args, $build_args ) = $self->validate_build({
-                            params => $_[0] // {},
-                            spec => {
-                                tag  => { default => $component },
-                                data => 0,
-                                ( $_[1] ? %{ $_[1] } : () )
-                            }
-                        });
-                    } else {
-                        $base_args = { tag => $component, %{ $_[0] } }; 
-                    }
+                $class->add_method(
+                    $component,
+                    sub {
+                        my $self = shift;
 
-                    return Moonshine::Element->new($base_args);
-                }
-	        }
+                        my ( $base_args, $build_args ) = ();
+                        if ( $self->can('validate_build') ) {
+                            ( $base_args, $build_args ) = $self->validate_build(
+                                {
+                                    params => $_[0] // {},
+                                    spec => {
+                                        tag  => { default => $component },
+                                        data => 0,
+                                        ( $_[1] ? %{ $_[1] } : () )
+                                    }
+                                }
+                            );
+                        }
+                        else {
+                            $base_args = { tag => $component, %{ $_[0] } };
+                        }
+
+                        return Moonshine::Element->new($base_args);
+                    }
+                );
+            }
         }
     );
 }
@@ -193,4 +228,4 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =cut
 
-1; # End of Moonshine::Magic
+1;    # End of Moonshine::Magic
