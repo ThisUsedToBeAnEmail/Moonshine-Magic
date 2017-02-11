@@ -93,6 +93,9 @@ sub import {
             croak "No roles supplied!" unless @roles;
             my $class = MOP::Class->new($caller);
             for my $r (@roles) {
+                eval "require $r";
+                croak $@ if $@;
+
                 my $role = MOP::Class->new($r);
                 for my $meth ( $role->all_methods ) {
                     next if $meth->name eq '__ANON__';
@@ -100,7 +103,9 @@ sub import {
                 }
 
                 for my $slot ( $role->all_slots ) {
+                    next if $class->has_slot($slot->name);
                     $class->alias_slot( $slot->name, $slot->initializer );
+                    next if $class->has_method($slot->name);
                     $class->add_method( $slot->name, $slot->initializer );
                 }
             }
